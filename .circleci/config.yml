@@ -6,13 +6,30 @@ workflows:
     jobs:
 
       - build
+      - deploy_production:
+
+        requires:
+
+          - build
+
 
 jobs:
   build:
     docker:
 
       - image: circleci/node
+  
+  deploy_production:
+    environment:
+      HEROKU_APP_NAME: workshop-ensi2
+    executor: heroku/default
+    steps:
 
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git:
+
+          only-branch: master
     working_directory: ~/repo
     steps:
 
